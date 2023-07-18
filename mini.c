@@ -100,6 +100,12 @@ int	ft_exec(t_shell *myshell)
 		else
 			printf("Home directory not found\n");
 	}
+	else if (strncmp(myshell->minput, "cd ", 3) == 0)
+  {  // Extract the path from the input
+    char* path = myshell->minput + 3;
+		if (chdir(path) != 0) 
+        printf("Failed to change directory\n");
+	}
 	else
 		printf("%s: Command not found\n", myshell->minput);
 	return (0);
@@ -119,8 +125,12 @@ int main()
 		if (myshell.minput == NULL) // Handle EOF or error condition
       break;
 		if (ft_exec(&myshell) == 1)
+		{
+			free(myshell.minput);
 			break;
+		}
 		free(myshell.minput);
+		free(myshell.pwd);
 	}
 /*
         if (strcmp(input, "ls") == 0) {
