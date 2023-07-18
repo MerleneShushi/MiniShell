@@ -54,16 +54,7 @@ int main() {
     return 0;
 }*/
 
-#include <stdio.h>
-#include <stdlib.h>
-#include <readline/readline.h>
-#include <readline/history.h>
-#include "libft/libft.h"
-#include <sys/types.h>
-#include <sys/wait.h>
-
-
-#define MAX_PATH_LENGTH 1024
+#include "minishell.h"
 
 int	ft_strcmp(char *s1, char *s2)
 {
@@ -81,22 +72,57 @@ int	ft_strcmp(char *s1, char *s2)
 	return (s1[a] - s2[a]);
 }
 
-int main() {
-    char* input;
+void	ft_inputuser(t_shell *myshell, char *input)
+{
+	input = getcwd(input, 2000);
+	input = ft_strjoin(input, "$> ");
+	myshell->minput = readline(input);
+	if (input[0] != '\0')
+		add_history(input);
+	free(input);
+}
 
-    while (1) {
-        input = readline("myshell> ");  // Displaying the prompt and read user input
+int	ft_exec(t_shell *myshell)
+{
+	if (ft_strcmp(myshell->minput, "exit") == 0)
+		return (1);
+	else if (ft_strcmp(myshell->minput, "pwd") == 0)
+	{
+		if (getcwd(myshell->pwd, 2000) != NULL)
+			printf("%s\n", myshell->pwd);
+		else
+			printf("Failed to get current working directory\n");
+	}
+	else if (ft_strcmp(myshell->minput, "cd") == 0)
+	{
+		if (myshell->home != NULL)
+			chdir(myshell->home);
+		else
+			printf("Home directory not found\n");
+	}
+	else
+		printf("%s: Command not found\n", myshell->minput);
+	return (0);
+}
 
-        if (input == NULL) {
-            // Handle EOF or error condition
-            break;
-        }
+int main() 
+{
+	t_shell myshell;
+	char* input;
 
-        // Example exit condition
-        if (ft_strcmp(input, "exit") == 0) {
-            break;
-        }
-
+	input = NULL;
+	myshell.pwd = getcwd(NULL, 2000);
+	myshell.home = getenv("HOME");
+	while(1)
+	{
+		ft_inputuser(&myshell, input);
+		if (myshell.minput == NULL) // Handle EOF or error condition
+      break;
+		if (ft_exec(&myshell) == 1)
+			break;
+		free(myshell.minput);
+	}
+/*
         if (strcmp(input, "ls") == 0) {
             // If the input is "ls", execute the ls command within the Minishell program
             pid_t pid = fork();  // Create a child process
@@ -116,38 +142,6 @@ int main() {
                 wait(NULL);  // Wait for the child process to complete
             }
         }
-
-        if (ft_strcmp(input, "cd") == 0) {
-            // If the input is "cd", change the directory to the home directory
-            char* home_dir = getenv("HOME");
-            if (home_dir != NULL) {
-                chdir(home_dir);
-            } else {
-                fprintf(stderr, "Home directory not found\n");
-            }
-        } else {
-            // Process and execute other commands
-            // ...
-        }
-
-        if (ft_strcmp(input, "pwd") == 0) {
-            // If the input is "pwd", print the current working directory
-            char current_dir[MAX_PATH_LENGTH];
-            if (getcwd(current_dir, sizeof(current_dir)) != NULL) {
-                printf("%s\n", current_dir);
-            } else {
-                fprintf(stderr, "Failed to get current working directory\n");
-            }
-        } else {
-            // Process and execute other commands
-            // ...
-        }
-
-
-        if (input[0] != '\0') {
-            add_history(input);  // Add the input to command history
-            //printf("%s\n", input);  // Echo input back to user
-    
             /*char* token;
             char* path = getenv("PATH");
 
@@ -179,7 +173,7 @@ int main() {
                 // If the program is not found in PATH or is not executable
                 printf("Command not found: %s\n", args[0]);
             }*/
-        }
+				//}
 
         /*HIST_ENTRY** history_entries = history_list();
         if (history_entries != NULL) {
@@ -188,10 +182,10 @@ int main() {
             }
         }*/
         
-        free(input); // Free retrieved input
+       /* free(input); // Free retrieved input
     }
 
-    return 0;
+    return 0;*/
 }
 
 /*int main()
