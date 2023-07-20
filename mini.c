@@ -10,51 +10,9 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-/*#include <string.h>
-#include <stdio.h>
-#include <stdlib.h>
-
-#define MAX_INPUT_SIZE 1024
-
-int main() {
-    char input[MAX_INPUT_SIZE];
-
-    while (1) {
-        printf("shell$ ");
-        fflush(stdout);
-
-        if (fgets(input, sizeof(input), stdin) == NULL) {
-            printf("\n");
-            break;
-        }
-
-        // Code to handle user input and execute commands
-
-        // Example exit condition
-        if (strcmp(input, "exit\n") == 0) {
-            break;
-        }
-    }
-
-    return 0;
-}
-
-int main() {
-    char input[MAX_INPUT_SIZE];
-    
-    while (1) {
-        printf("myshell> ");  // Displaying the prompt
-
-        if (fgets(input, sizeof(input), stdin) == NULL) {
-            printf("\n");
-            break;
-        }
-    }
-
-    return 0;
-}*/
-
 #include "minishell.h"
+
+extern int	g_exit;
 
 int	ft_strcmp(char *s1, char *s2)
 {
@@ -72,14 +30,40 @@ int	ft_strcmp(char *s1, char *s2)
 	return (s1[a] - s2[a]);
 }
 
+
 void	ft_inputuser(t_shell *myshell, char *input)
 {
 	input = getcwd(input, 2000);
 	input = ft_strjoin(input, "$> ");
 	myshell->minput = readline(input);
-	if (input[0] != '\0')
-		add_history(input);
-	free(input);
+	if (myshell->minput[0] != '\0')
+		add_history(myshell->minput);
+    free(input);
+}
+
+char    *ft_echo(t_shell *myshell, char *input)
+{
+    char    *echo;
+    int     i;
+    int     j;
+
+    i = 0;
+    j = 0;
+    //printf("input: %s\n", input);
+    echo = ft_calloc(sizeof(char), ft_strlen(input) + 1);
+    while (input[i] != '\0')
+    {
+        if (input[i] == '\"' || input[i] == '\'')
+            i++;
+        else
+        {
+            echo[j] = input[i];
+            i++;
+            j++;
+        }
+    }
+    //printf("echo: %s\n", echo);
+    return (echo);
 }
 
 int	ft_exec(t_shell *myshell)
@@ -100,12 +84,28 @@ int	ft_exec(t_shell *myshell)
 		else
 			printf("Home directory not found\n");
 	}
-	else if (strncmp(myshell->minput, "cd ", 3) == 0)
-  {  // Extract the path from the input
-    char* path = myshell->minput + 3;
-		if (chdir(path) != 0) 
+	else if (ft_strncmp(myshell->minput, "cd ", 3) == 0)
+    {  // Extract the path from the input
+        myshell->path = myshell->minput + 3;
+		if (chdir(myshell->path) != 0) 
         printf("Failed to change directory\n");
 	}
+    else if (ft_strncmp(myshell->minput, "echo", 4) == 0)
+    {
+        myshell->myecho = ft_echo(myshell, myshell->minput + 5);
+        if (ft_strlen(myshell->minput) == 4)
+            printf("\n");
+        else if (ft_strncmp(myshell->minput, "echo -n ", 8) == 0)
+        {
+            myshell->myecho = ft_echo(myshell, myshell->minput + 8);
+            ft_printf("%s", myshell->myecho);
+        }
+        else if ((ft_strncmp(myshell->minput, "echo ", 5) != 0))
+            printf("%s: Command not found\n", myshell->minput);
+        else 
+            ft_printf("%s\n", myshell->myecho);
+        free(myshell->myecho);
+    }
 	else
 		printf("%s: Command not found\n", myshell->minput);
 	return (0);
@@ -123,15 +123,13 @@ int main()
 	{
 		ft_inputuser(&myshell, input);
 		if (myshell.minput == NULL) // Handle EOF or error condition
-      break;
+            break;
 		if (ft_exec(&myshell) == 1)
-		{
-			free(myshell.minput);
-			break;
-		}
-		free(myshell.minput);
-		free(myshell.pwd);
+            break;
+        free(myshell.minput);
 	}
+    free(myshell.minput);
+	free(myshell.pwd);
 /*
         if (strcmp(input, "ls") == 0) {
             // If the input is "ls", execute the ls command within the Minishell program

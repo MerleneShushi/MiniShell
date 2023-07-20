@@ -25,6 +25,8 @@ typedef struct s_shell
   char	*minput;
   char  *pwd;
   char  *home;
+  char  *path;
+  char  *myecho;
 }				t_shell;
 
 int    main();
