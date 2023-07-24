@@ -10,6 +10,9 @@
 /*                                                                            */
 /* ************************************************************************** */
 
+#ifndef MINISHELL_H
+# define MINISHELL_H
+
 #include <stdio.h>
 #include <stdlib.h>
 #include <readline/readline.h>
@@ -27,6 +30,12 @@ typedef struct s_shell
   char  *home;
   char  *path;
   char  *myecho;
+  char  **token;
+  int   ctoken;
 }				t_shell;
 
-int    main();
+int	main();
+int	ft_exit(t_shell *myshell);
+int	ft_counttoken(t_shell *myshell);
+
+#endif
