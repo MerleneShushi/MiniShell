@@ -32,14 +32,14 @@ int	ft_exec(t_shell *myshell)
 {
 	myshell->token = ft_split(myshell->minput, 32);
 	myshell->ctoken = ft_counttoken(myshell);
-	if (ft_strncmp(myshell->minput, "exit", 4) == 0)
+	if (ft_strncmp(myshell->token[0], "exit", 4) == 0)
 		return (ft_exit(myshell));
-	/*else if (ft_strcmp(myshell->minput, "pwd") == 0)
+	else if (ft_strcmp(myshell->token[0], "pwd") == 0)
 		ft_pwd(myshell);
-	else if (ft_strcmp(myshell->minput, "cd") == 0)
+	else if (ft_strncmp(myshell->token[0], "cd", 2) == 0)
 		ft_cd(myshell);
-  else if (ft_strncmp(myshell->minput, "echo", 4) == 0)
-    ft_echo(myshell);*/
+  else if (ft_strncmp(myshell->token[0], "echo", 4) == 0)
+    ft_echo(myshell);
 	else
 		printf("%s: Command not found\n", myshell->minput);
 	return (0);

@@ -35,7 +35,11 @@ typedef struct s_shell
 }				t_shell;
 
 int	main();
+int	ft_strcmp(char *s1, char *s2);
 int	ft_exit(t_shell *myshell);
 int	ft_counttoken(t_shell *myshell);
+void  ft_pwd(t_shell *myshell);
+void  ft_cd(t_shell *myshell);
+void  ft_echo(t_shell *myshell);
 
 #endif
