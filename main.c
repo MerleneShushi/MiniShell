@@ -12,6 +12,8 @@
 
 #include "minishell.h"
 
+int	g_exit = 0;
+
 int	ft_strcmp(char *s1, char *s2)
 {
 	int	a;
@@ -30,6 +32,9 @@ int	ft_strcmp(char *s1, char *s2)
 
 int	ft_exec(t_shell *myshell)
 {
+	int	t;
+
+	t = 0;
 	myshell->token = ft_split(myshell->minput, 32);
 	myshell->ctoken = ft_counttoken(myshell);
 	if (ft_strncmp(myshell->token[0], "exit", 4) == 0)
@@ -38,40 +43,52 @@ int	ft_exec(t_shell *myshell)
 		ft_pwd(myshell);
 	else if (ft_strncmp(myshell->token[0], "cd", 2) == 0)
 		ft_cd(myshell);
-  else if (ft_strncmp(myshell->token[0], "echo", 4) == 0)
-    ft_echo(myshell);
+	else if (ft_strncmp(myshell->token[0], "echo", 4) == 0)
+		ft_echo(myshell, t);
 	else
 		printf("%s: Command not found\n", myshell->minput);
 	return (0);
 }
 
-void	ft_inputuser(t_shell *myshell, char *input)
+void	ft_prompt(t_shell *myshell)
 {
-	input = getcwd(input, 2000);
+	char *input;
+  
+  input = NULL;
+  input = getcwd(input, 2000);
 	input = ft_strjoin(input, "$> ");
 	myshell->minput = readline(input);
 	if (myshell->minput[0] != '\0')
 		add_history(myshell->minput);
-    free(input);
+  free(input);
 }
 
-int main() 
+int main(int argc, char **argv, char **envp) 
 {
 	t_shell myshell;
-	char* input;
 
-	input = NULL;
-	myshell.pwd = getcwd(NULL, 2000);
-	myshell.home = getenv("HOME");
-	while(1)
+	(void)argv;
+	if (argc != 1)
+		ft_printf("Error: too many arguments\n");
+	else
 	{
-		ft_inputuser(&myshell, input);
-		if (myshell.minput == NULL) // Handle EOF or error condition
-            break;
-		if (ft_exec(&myshell) == 1)
-            break;
-    free(myshell.minput);
-	}
-  free(myshell.minput);
-	free(myshell.pwd);
+		ft_env(envp);
+		myshell.pwd = getcwd(NULL, 2000);
+		myshell.home = getenv("HOME");
+		while(1)
+		{
+			ft_prompt(&myshell);
+			if (myshell.minput == NULL) // Handle EOF or error condition
+				break;
+			if (ft_exec(&myshell) == 1)
+			{
+				g_exit=1;
+				exit(g_exit);
+			}
+		free(myshell.minput);
+		}
+	  free(myshell.minput);
+		free(myshell.pwd);
+  }
+  return (0);
 }

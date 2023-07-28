@@ -13,15 +13,15 @@
 #ifndef MINISHELL_H
 # define MINISHELL_H
 
-#include <stdio.h>
-#include <stdlib.h>
 #include <readline/readline.h>
 #include <readline/history.h>
 #include "libft/libft.h"
-#include <sys/types.h>
+#include <limits.h>
 #include <sys/wait.h>
 
 #define MAX_PATH_LENGTH 1024
+
+extern  int  g_exit;
 
 typedef struct s_shell
 {
@@ -40,6 +40,7 @@ int	ft_exit(t_shell *myshell);
 int	ft_counttoken(t_shell *myshell);
 void  ft_pwd(t_shell *myshell);
 void  ft_cd(t_shell *myshell);
-void  ft_echo(t_shell *myshell);
+void  ft_echo(t_shell *myshell, int a);
+void	initvar(t_shell *myshell);
 
 #endif

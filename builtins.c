@@ -14,33 +14,33 @@
 
 int ft_counttoken(t_shell *myshell)
 {
-  int a;
+  int t;
 
-  a = 0;
-  while (myshell->token[a])
+  t = 0;
+  while (myshell->token[t])
   {
-    a++;
+    t++;
   }
-  return (a);
+  return (t);
 }
 
 int ft_exit(t_shell *myshell)
 {
-  int a;
+  int t;
   
-  a = 0;
+  t = 0;
   if (myshell->ctoken > 2)
     return (ft_printf("%s: too many arguments\n", myshell->token[0]));
   else if (myshell->ctoken == 2)
   {
-    while (myshell->token[1][a])
+    while (myshell->token[1][t])
     {
-      if (myshell->token[1][a] < 48 || myshell->token[1][a] > 57)
+      if (myshell->token[1][t] < 48 || myshell->token[1][t] > 57)
       {
         return (ft_printf("%s: %s: numeric argument required\n", myshell->token[0], myshell->token[1]));
         break;
       }
-      a++;
+      t++;
     }
   }
   return(1);
@@ -48,6 +48,7 @@ int ft_exit(t_shell *myshell)
 
 void  ft_pwd(t_shell *myshell)
 {
+  
   if (getcwd(myshell->pwd, 2000) != NULL)
 		printf("%s\n", myshell->pwd);
 	else
@@ -71,34 +72,29 @@ void  ft_cd(t_shell *myshell)
 	}
 }
 
-void  ft_echo(t_shell *myshell)
+void  ft_echo(t_shell *myshell, int t)
 {
-  int a;
-  
-  //myshell->myecho = ft_echo(myshell, myshell->minput + 5);
   if (myshell->ctoken  == 1)
     printf("\n");
   else if (ft_strcmp(myshell->token[1], "-n") == 0)
   {
-    a = 1;
-    while (myshell->token[++a])
+    t = 1;
+    while (myshell->token[++t])
     {
-      if (myshell->token[a + 1])
-        ft_printf("%s ", myshell->token[a]);
+      if (myshell->token[t + 1])
+        ft_printf("%s ", myshell->token[t]);
       else
-        ft_printf("%s", myshell->token[a]);
+        ft_printf("%s", myshell->token[t]);
     }
   }
   else
   {
-    a = 0;
-    while (myshell->token[++a])
+    while (myshell->token[++t])
     {
-      if (myshell->token[a + 1])
-        ft_printf("%s ", myshell->token[a]);
+      if (myshell->token[t + 1])
+        ft_printf("%s ", myshell->token[t]);
       else
-        ft_printf("%s\n", myshell->token[a]);
+        ft_printf("%s\n", myshell->token[t]);
     }
   }
-  //free(myshell->myecho);
 }
