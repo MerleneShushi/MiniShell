@@ -12,21 +12,45 @@
 
 #include "minishell.h"
 
-void ft_env(char **envp)
+
+t_list  *ft_env(char **envp)
 {
   t_list  *head;
-  t_list  *info;
+  t_list  *temp;
   int     i;
 
   i = 0;
-  while (envp[i])
+  head = NULL;
+  ft_lstadd_back(&head, ft_lstnew(create_env_node(envp[i])));
+  temp = head;
+  while (envp[++i])
   {
-    info = ft_lstnew(envp[i]);
-    ft_lstadd_back(&head, info);
-    i++;
+    temp->next = ft_lstnew(create_env_node(envp[i]));
+    temp = temp->next;
   }
-  {
-    printf("%s\n", myshell->env[i]);
+  return (head);
+}
+
+t_env *create_env_node(char *envp)
+{
+  int i;
+  int size;
+  int size2;
+  t_env *env;
+
+  i = 0;
+  env = ft_calloc(sizeof(t_env), 1);
+  while (envp[i] != '=')
     i++;
-  }
+  size = ++i;
+  env->name = ft_calloc(sizeof(char), size + 1);
+  ft_strlcpy(env->name, envp, size);
+  env->name[size + 1] = '\0';
+  while (envp[i] != '\0')
+    i++;
+  size2 = i - size;
+  env->info = ft_calloc(sizeof(char), size2 + 1);
+  ft_strlcpy(env->info, envp + size, size2);
+  env->info[size2 + 1] = '\0';
+  return (env);
 }

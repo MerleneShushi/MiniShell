@@ -34,6 +34,12 @@ typedef struct s_shell
   int   ctoken;
 }				t_shell;
 
+typedef struct s_env
+{
+  char  *name;
+  char  *info;
+}       t_env;
+
 int	main();
 int	ft_strcmp(char *s1, char *s2);
 int	ft_exit(t_shell *myshell);
@@ -41,6 +47,8 @@ int	ft_counttoken(t_shell *myshell);
 void  ft_pwd(t_shell *myshell);
 void  ft_cd(t_shell *myshell);
 void  ft_echo(t_shell *myshell, int a);
-void	initvar(t_shell *myshell);
+t_list  *ft_env(char **envp);
+t_env *create_env_node(char *envp);
+
 
 #endif
