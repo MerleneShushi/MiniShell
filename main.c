@@ -45,6 +45,8 @@ int	ft_exec(t_shell *myshell)
 		ft_cd(myshell);
 	else if (ft_strncmp(myshell->token[0], "echo", 4) == 0)
 		ft_echo(myshell, t);
+	else if (ft_strcmp(myshell->token[0], "env") == 0)
+		ft_myenv(myshell);
 	else
 		printf("%s: Command not found\n", myshell->minput);
 	return (0);
@@ -72,7 +74,7 @@ int main(int argc, char **argv, char **envp)
 		ft_printf("Error: too many arguments\n");
 	else
 	{
-		ft_env(envp);
+		myshell.myenv = ft_env(envp);
 		myshell.pwd = getcwd(NULL, 2000);
 		myshell.home = getenv("HOME");
 		while(1)
@@ -80,6 +82,7 @@ int main(int argc, char **argv, char **envp)
 			ft_prompt(&myshell);
 			if (myshell.minput == NULL) // Handle EOF or error condition
 				break;
+			
 			if (ft_exec(&myshell) == 1)
 			{
 				g_exit=1;
@@ -87,7 +90,7 @@ int main(int argc, char **argv, char **envp)
 			}
 		free(myshell.minput);
 		}
-		freelol
+		free_env_list(myshell.myenv);
 	  free(myshell.minput);
 		free(myshell.pwd);
   }

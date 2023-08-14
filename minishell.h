@@ -32,6 +32,7 @@ typedef struct s_shell
   char  *myecho;
   char  **token;
   int   ctoken;
+  t_list *myenv;
 }				t_shell;
 
 typedef struct s_env
@@ -49,6 +50,10 @@ void  ft_cd(t_shell *myshell);
 void  ft_echo(t_shell *myshell, int a);
 t_list  *ft_env(char **envp);
 t_env *create_env_node(char *envp);
+void  freeenv(t_list *env);
+void  ft_myenv(t_shell *myshell);
+void  free_env_list(t_list *head);
+
 
 
 #endif

@@ -42,15 +42,29 @@ t_env *create_env_node(char *envp)
   env = ft_calloc(sizeof(t_env), 1);
   while (envp[i] != '=')
     i++;
-  size = ++i;
+  i++;
+  size = i;
   env->name = ft_calloc(sizeof(char), size + 1);
-  ft_strlcpy(env->name, envp, size);
-  env->name[size + 1] = '\0';
-  while (envp[i] != '\0')
+  ft_strlcpy(env->name, envp, size + 1);
+  env->name[size] = '\0';
+  while (envp[++i] != '\0')
     i++;
   size2 = i - size;
   env->info = ft_calloc(sizeof(char), size2 + 1);
-  ft_strlcpy(env->info, envp + size, size2);
-  env->info[size2 + 1] = '\0';
+  ft_strlcpy(env->info, envp + size, size2 + 1);
+  env->info[size2] = '\0';
   return (env);
+}
+
+void  freeenv(t_list *env)
+{
+  t_list *temp;
+
+  while (env)
+  {
+    temp = env->next;
+    free(env->content);
+    free(env);
+    env = temp;
+  }
 }

@@ -12,11 +12,11 @@
 
 NAME = minishell
 
-SRC = main.c builtins.c env.c
+SRC = main.c builtins.c builts2.c env.c
 	
 CC = cc -g
 RM = rm -rf
-CFLAGS = -Wall -Wextra -Werror
+CFLAGS = -Wall -Wextra -Werror -fsanitize=address
 
 OBJ = $(SRC:%.c=%.o)
 BONUS = $(BNS:%.c=%.o)
