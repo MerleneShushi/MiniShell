@@ -12,6 +12,60 @@
 
 #include "minishell.h"
 
+char    *exp_name_node(t_env *exp, char *envp)
+{
+  int i;
+  char *name;
+
+  i = 0;
+  while (envp[i] != '=' && envp[i] != '\0')
+    i++;
+  name = ft_calloc(sizeof(char), i + 2);
+  ft_strlcpy(name, envp, i + 1);
+  if (envp[i] == '=')
+    name[i] = '=';
+  exp->name = ft_strjoin("declare -x ", name);
+  free(name);
+  return (exp->name);
+}
+
+char    *exp_info_node(t_env *exp, char *envp)
+{
+  int i;
+  int j;
+  char *info;
+
+  i = 0;
+  j = ft_strlen(envp);
+  while (envp[i] != '=' && envp[i] != '\0')
+    i++;
+  i++;
+  if (j == i)
+  {
+    exp->info = ft_strdup(" ");
+    return (exp->info);
+  }
+  info = ft_strdup(envp + i);
+  exp->info = ft_strjoin("\"", info);
+  free(info);
+  return (exp->info);
+}
+
+t_env *create_exp_node(char *envp)
+{
+  t_env *exp;
+
+  exp = ft_calloc(sizeof(t_env), 1);
+  exp->name = exp_name_node(exp, envp);
+  if (!strchr(exp->name, '='))
+  {
+    exp->info = ft_strdup(" ");
+    return (exp);
+  }
+  exp->info = exp_info_node(exp, envp);
+  return (exp);
+}
+
 t_list  *ft_exp(char **envp)
 {
   t_list  *head;
@@ -30,30 +84,6 @@ t_list  *ft_exp(char **envp)
   return (head);
 }
 
-t_env *create_exp_node(char *envp)
-{
-  int i;
-  int size;
-  int size2;
-  t_env *exp;
 
-  i = 0;
-  exp = ft_calloc(sizeof(t_env), 1);
-  if (!strchr(envp, '='))
-  {
-    exp->name = ft_strdup(envp);
-    return (exp);
-  }
-  while (envp[i] != '=')
-    i++;
-  exp->name = ft_calloc(sizeof(char), i + 2);
-  ft_strlcpy(exp->name, envp, i + 1);
-  exp->name[i] = '=';
-  size = i + 1;
-  while (envp[++i] != '\0')
-    i++;
-  size2 = i - size;
-  exp->info = ft_calloc(sizeof(char), size2 + 2);
-  ft_strlcpy(exp->info, envp + size, size2 + 1);
-  return (exp);
-}
+
+
