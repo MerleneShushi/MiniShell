@@ -40,19 +40,22 @@ t_env *create_env_node(char *envp)
 
   i = 0;
   env = ft_calloc(sizeof(t_env), 1);
+  if (!strchr(envp, '='))
+  {
+    env->name = ft_strdup(envp);
+    return (env);
+  }
   while (envp[i] != '=')
     i++;
-  i++;
-  size = i;
-  env->name = ft_calloc(sizeof(char), size + 1);
-  ft_strlcpy(env->name, envp, size + 1);
-  env->name[size] = '\0';
+  env->name = ft_calloc(sizeof(char), i + 2);
+  ft_strlcpy(env->name, envp, i + 1);
+  env->name[i] = '=';
+  size = i + 1;
   while (envp[++i] != '\0')
     i++;
   size2 = i - size;
-  env->info = ft_calloc(sizeof(char), size2 + 1);
+  env->info = ft_calloc(sizeof(char), size2 + 2);
   ft_strlcpy(env->info, envp + size, size2 + 1);
-  env->info[size2] = '\0';
   return (env);
 }
 
