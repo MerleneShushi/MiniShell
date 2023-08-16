@@ -12,7 +12,7 @@
 
 NAME = minishell
 
-SRC = main.c builtins.c builts2.c env.c
+SRC = main.c builtins.c builtins2.c env.c exp.c
 	
 CC = cc -g
 RM = rm -rf

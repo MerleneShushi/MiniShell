@@ -47,6 +47,8 @@ int	ft_exec(t_shell *myshell)
 		ft_echo(myshell, t);
 	else if (ft_strcmp(myshell->token[0], "env") == 0)
 		ft_myenv(myshell);
+	else if (ft_strcmp(myshell->token[0], "export") == 0)
+		ft_myexp(myshell);
 	else
 		printf("%s: Command not found\n", myshell->minput);
 	return (0);
@@ -75,6 +77,7 @@ int main(int argc, char **argv, char **envp)
 	else
 	{
 		myshell.myenv = ft_env(envp);
+		myshell.myexp = ft_exp(envp);
 		myshell.pwd = getcwd(NULL, 2000);
 		myshell.home = getenv("HOME");
 		while(1)
