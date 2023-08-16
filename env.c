@@ -28,6 +28,7 @@ t_list  *ft_env(char **envp)
     temp->next = ft_lstnew(create_env_node(envp[i]));
     temp = temp->next;
   }
+  
   return (head);
 }
 

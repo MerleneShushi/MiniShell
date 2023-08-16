@@ -45,11 +45,13 @@ void  ft_myenv(t_shell *myshell)
   }
   free_env_list(myshell->myenv);
 }
+
 void  ft_myexp(t_shell *myshell)
 {
   t_list  *current;
   t_env *exp_node;
 
+  
   current = myshell->myexp;
   while (current != NULL)
   {

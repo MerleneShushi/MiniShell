@@ -12,6 +12,38 @@
 
 #include "minishell.h"
 
+void  swap_env(t_env **a, t_env **b)
+{
+  t_env *temp;
+
+  temp = *a;
+  *a = *b;
+  *b = temp;
+} 
+
+void  ft_sort_env(t_list *head)
+{
+  t_list  *current;
+  t_list  *next;
+  t_env *env_node;
+  t_env *env_node2;
+
+  current = head;
+  while (current != NULL)
+  {
+    next = current->next;
+    while (next != NULL)
+    {
+      env_node = (t_env *)current->content;
+      env_node2 = (t_env *)next->content;
+      if (ft_strcmp(env_node->name, env_node2->name) > 0)
+        swap_env(&env_node, &env_node2);
+      next = next->next;
+    }
+    current = current->next;
+  }
+}
+
 char    *exp_name_node(t_env *exp, char *envp)
 {
   int i;
@@ -34,6 +66,7 @@ char    *exp_info_node(t_env *exp, char *envp)
   int i;
   int j;
   char *info;
+  char *temp;
 
   i = 0;
   j = ft_strlen(envp);
@@ -46,8 +79,10 @@ char    *exp_info_node(t_env *exp, char *envp)
     return (exp->info);
   }
   info = ft_strdup(envp + i);
-  exp->info = ft_strjoin("\"", info);
+  temp = ft_strjoin("\"", info);
+  exp->info = ft_strjoin(temp, "\"");
   free(info);
+  free(temp);
   return (exp->info);
 }
 
@@ -81,6 +116,7 @@ t_list  *ft_exp(char **envp)
     temp->next = ft_lstnew(create_exp_node(envp[i]));
     temp = temp->next;
   }
+  ft_sort_env(head);
   return (head);
 }
 
