@@ -12,36 +12,29 @@
 
 #include "minishell.h"
 
-void  swap_env(t_env **a, t_env **b)
+t_list  *ft_sort_env(t_list *head)
 {
-  t_env *temp;
+  t_list  *tmp;
+  void  *cont;
 
-  temp = *a;
-  *a = *b;
-  *b = temp;
-} 
-
-void  ft_sort_env(t_list *head)
-{
-  t_list  *current;
-  t_list  *next;
-  t_env *env_node;
-  t_env *env_node2;
-
-  current = head;
-  while (current != NULL)
+  tmp = head;
+  while(head->next != NULL)
   {
-    next = current->next;
-    while (next != NULL)
+    t_env *exp_node = (t_env *)head->content;
+    t_env *exp_node2 = (t_env *)head->next->content;
+    if (ft_strcmp(exp_node->name, exp_node2->name) > 0)
     {
-      env_node = (t_env *)current->content;
-      env_node2 = (t_env *)next->content;
-      if (ft_strcmp(env_node->name, env_node2->name) > 0)
-        swap_env(&env_node, &env_node2);
-      next = next->next;
+      cont = head->content;
+      head->content = head->next->content;
+      head->next->content = cont;
+      head = tmp;
     }
-    current = current->next;
+    else
+      head = head->next;
   }
+  head = tmp;
+  head = tmp;
+  return (head);
 }
 
 char    *exp_name_node(t_env *exp, char *envp)
@@ -116,7 +109,16 @@ t_list  *ft_exp(char **envp)
     temp->next = ft_lstnew(create_exp_node(envp[i]));
     temp = temp->next;
   }
-  ft_sort_env(head);
+  temp = head;
+  // while (head != NULL)
+  // {
+  //   //printf("%s\n", (char *)head->content);
+  //   t_env *exp_node = (t_env *)head->content;
+  //   ft_printf("%s%s\n", exp_node->name, exp_node->info);
+  //   head = head->next;
+  // }
+  head = temp;
+  head = ft_sort_env(head);
   return (head);
 }
 

@@ -56,7 +56,7 @@ void  ft_myexp(t_shell *myshell)
   while (current != NULL)
   {
     exp_node = (t_env *)current->content;
-    printf("%s%s\n", exp_node->name, exp_node->info);
+    ft_printf("%s%s\n", exp_node->name, exp_node->info);
     current = current->next;
   }
   free_env_list(myshell->myexp);
