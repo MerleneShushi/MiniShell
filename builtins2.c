@@ -43,7 +43,7 @@ void  ft_myenv(t_shell *myshell)
     printf("%s%s\n", env_node->name, env_node->info);
     current = current->next;
   }
-  free_env_list(myshell->myenv);
+  //free_env_list(myshell->myenv);
 }
 
 void ft_printexp(t_shell *myshell)
@@ -104,6 +104,35 @@ void  ft_addexp(t_shell *myshell, int t)
     ft_lstadd_back(&myshell->myexp, ft_lstnew(new_node));
   //free(new_node);
 }
+
+void  ft_addenv(t_shell *myshell, int t)
+{
+  t_env *new_node;
+  t_list  *current;
+  t_env *current_node;
+
+  new_node = create_env_node(myshell->token[t]);
+  current = myshell->myenv;
+  while (current != NULL)
+  {
+    current_node = (t_env *)current->content;
+    if (ft_strcmp(new_node->name, current_node->name) == 0)
+    {
+      if (ft_strcmp(new_node->info, current_node->info) == 0)
+        break;
+      else
+      {
+        current_node->info = new_node->info;
+        break;
+      }
+    }
+    else
+      current = current->next;
+  }
+  if (current == NULL && ft_strchr(new_node->name, '='))
+    ft_lstadd_back(&myshell->myenv, ft_lstnew(new_node));
+  //free(new_node);
+}
 void  ft_myexp(t_shell *myshell)
 {
   int t;
@@ -116,6 +145,7 @@ void  ft_myexp(t_shell *myshell)
     while (t < myshell->ctoken)
     {
       ft_addexp(myshell, t);
+      ft_addenv(myshell, t);
       t++;
     }
     ft_sort_exp(myshell->myexp);
