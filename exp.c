@@ -12,7 +12,7 @@
 
 #include "minishell.h"
 
-t_list  *ft_sort_env(t_list *head)
+t_list  *ft_sort_exp(t_list *head)
 {
   t_list  *tmp;
   void  *cont;
@@ -32,7 +32,6 @@ t_list  *ft_sort_env(t_list *head)
     else
       head = head->next;
   }
-  head = tmp;
   head = tmp;
   return (head);
 }
@@ -68,7 +67,7 @@ char    *exp_info_node(t_env *exp, char *envp)
   i++;
   if (j == i)
   {
-    exp->info = ft_strdup(" ");
+    exp->info = ft_strdup("\"\"");
     return (exp->info);
   }
   info = ft_strdup(envp + i);
@@ -110,15 +109,8 @@ t_list  *ft_exp(char **envp)
     temp = temp->next;
   }
   temp = head;
-  // while (head != NULL)
-  // {
-  //   //printf("%s\n", (char *)head->content);
-  //   t_env *exp_node = (t_env *)head->content;
-  //   ft_printf("%s%s\n", exp_node->name, exp_node->info);
-  //   head = head->next;
-  // }
   head = temp;
-  head = ft_sort_env(head);
+  head = ft_sort_exp(head);
   return (head);
 }
 
