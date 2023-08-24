@@ -26,8 +26,21 @@ void ft_del_exp(t_list **head, char *name)
   {
     exp_node = (t_env *)current->content;
     printf("%s\n", exp_node->name);
-    printf("%s\n", name);
-    if (ft_strcmp(exp_node->name, new_node->name) == 0)
+    printf("%s\n", new_node->name);
+    if (ft_strchr(exp_node->name, '='))
+    {
+      if ((ft_strncmp(exp_node->name, new_node->name, (ft_strlen(exp_node->name) -1)) == 0) && (ft_strlen(exp_node->name) - 1) == ft_strlen(new_node->name))
+      {
+        ft_printf("found\n");
+        if (previous == NULL)
+          *head = current->next;
+        else
+          previous->next = current->next;
+        ft_lstdelone(current, free);
+        return ;
+      }
+    }
+    else if (ft_strncmp(exp_node->name, new_node->name, ft_strlen(exp_node->name)) == 0)
     {
       ft_printf("found\n");
       if (previous == NULL)
