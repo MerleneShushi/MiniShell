@@ -58,6 +58,8 @@ void  ft_myenv(t_shell *myshell);
 void  free_env_list(t_list *head);
 void  ft_myexp(t_shell *myshell);
 t_list  *ft_sort_exp(t_list *head);
+void  ft_unset(t_shell *myshell);
+
 
 
 

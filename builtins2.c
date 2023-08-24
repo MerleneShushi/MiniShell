@@ -67,7 +67,7 @@ int ft_strcmp_exp(char *s1, char *s2, char a)
   i = 0;
   while (s1[i] != a && s2[i] != a && s1[i] == s2[i] && s1[i] != '\0')
     i++;
-  if (s1[i] == a || s2[i] == a)
+  if ((s1[i] == a && (s2[i] == a || s2[i] == '\0')) || (s2[i] == a && (s1[i] == a || s1[i] == '\0')))
     return (s1[i-1] - s2[i-1]);
   return (s1[i] - s2[i]);
 }
@@ -131,6 +131,8 @@ void  ft_addenv(t_shell *myshell, int t)
   }
   if (current == NULL && ft_strchr(new_node->name, '='))
     ft_lstadd_back(&myshell->myenv, ft_lstnew(new_node));
+  //free(new_node->name);
+  //free(new_node->info);
   //free(new_node);
 }
 void  ft_myexp(t_shell *myshell)
@@ -152,3 +154,4 @@ void  ft_myexp(t_shell *myshell)
     ft_printexp(myshell);
   }
 }
+

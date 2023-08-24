@@ -52,7 +52,7 @@ t_env *create_env_node(char *envp)
   ft_strlcpy(env->name, envp, i + 1);
   env->name[i] = '=';
   size = i + 1;
-  while (envp[++i] != '\0')
+  while (envp[i] != '\0')
     i++;
   size2 = i - size;
   env->info = ft_calloc(sizeof(char), size2 + 2);

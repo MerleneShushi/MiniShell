@@ -49,6 +49,8 @@ int	ft_exec(t_shell *myshell)
 		ft_myenv(myshell);
 	else if (ft_strcmp(myshell->token[0], "export") == 0)
 		ft_myexp(myshell);
+	else if (ft_strcmp(myshell->token[0], "unset") == 0)
+		ft_unset(myshell);
 	else
 		printf("%s: Command not found\n", myshell->minput);
 	return (0);
