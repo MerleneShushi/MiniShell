@@ -57,6 +57,7 @@ void  ft_pwd(t_shell *myshell)
 
 void  ft_cd(t_shell *myshell)
 {
+  //printf("%d\n", myshell->ctoken);
   if (!myshell->token[1])
 	{
 		if (myshell->home != NULL)

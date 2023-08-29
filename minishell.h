@@ -29,10 +29,11 @@ typedef struct s_shell
   char  *pwd;
   char  *home;
   char  *path;
+  char  **paths;
   char  *myecho;
   char  **token;
   int   ctoken;
-  t_list *myenv;
+  t_list  *myenv;
   t_list *myexp;
 }				t_shell;
 
