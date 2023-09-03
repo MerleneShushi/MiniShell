@@ -29,41 +29,40 @@ int	ft_strcmp(char *s1, char *s2)
 	}
 	return (s1[a] - s2[a]);
 }
-
-/*int find_and_execute_command(char *command, char **paths) 
+int	ft_builtin(t_shell *myshell)
 {
-    for (int i = 0; paths[i] != NULL; i++) 
-		{
-        char executable_path[256];
-        snprintf(executable_path, sizeof(executable_path), "%s/%s", paths[i], command);
-		
-        if (access(executable_path, X_OK) == 0) 
-				{
-            // Executa o comando diretamente
-            char *args[] = {command, NULL};
-						execv(executable_path, args);
-            perror("Erro ao executar o comando");
-            return 1; // Indica erro
-        }
-		}
+	if (ft_strcmp(myshell->token[0], "pwd") == 0)
+		return (1);
+	else if (ft_strcmp(myshell->token[0], "exit") == 0)
+		return (1);
+	else if (ft_strcmp(myshell->token[0], "cd") == 0)
+		return (1);
+	else if (ft_strcmp(myshell->token[0], "echo") == 0)
+		return (1);
+	else if (ft_strcmp(myshell->token[0], "env") == 0)
+		return (1);
+	else if (ft_strcmp(myshell->token[0], "export") == 0)
+		return (1);
+	else if (ft_strcmp(myshell->token[0], "unset") == 0)
+		return (1);
+	else
 		return (0);
-}*/
+}
 
 int	ft_exec(t_shell *myshell)
 {
 	int	t;
 	int pid;
 
-	pid = fork();
 	t = 0;
 	myshell->token = ft_split(myshell->minput, 32);
 	myshell->ctoken = ft_counttoken(myshell);
-	if (ft_strncmp(myshell->token[0], "exit", 4) == 0)
-			return (ft_exit(myshell));
-	if (pid == 0)
+	if (ft_builtin(myshell) == 1)
 	{
 		if (ft_strcmp(myshell->token[0], "pwd") == 0)
 			ft_pwd(myshell);
+		else if (ft_strncmp(myshell->token[0], "exit", 4) == 0)
+			return (ft_exit(myshell));
 		else if (ft_strncmp(myshell->token[0], "cd", 2) == 0)
 			ft_cd(myshell);
 		else if (ft_strncmp(myshell->token[0], "echo", 4) == 0)
@@ -74,19 +73,24 @@ int	ft_exec(t_shell *myshell)
 			ft_myexp(myshell);
 		else if (ft_strcmp(myshell->token[0], "unset") == 0)
 			ft_unset(myshell);
-		else if (access(myshell->token[0], X_OK) == 0)
-		{
-					execv(myshell->token[0], myshell->token);
-					perror("Erro ao executar o comando");
-					return 0; // Indica erro
-		}
-		//else if (find_and_execute_command(myshell->token[0], myshell->paths) == 1)
-		//	return(0);
-		else
-			printf("%s: Command not found\n", myshell->minput);
 	}
-	else
-		wait(NULL);
+	else 
+	{
+		pid = fork();
+		if (pid == 0)
+		{
+			if (access(myshell->token[0], X_OK) == 0)
+			{
+						execv(myshell->token[0], myshell->token);
+						perror("Erro ao executar o comando");
+						return 0; // Indica erro
+			}
+			else
+				printf("%s: Command not found\n", myshell->minput);
+		}
+		else if (pid > 0)
+			wait(NULL);
+	}
 	t = 0;
 	while(myshell->token[t])
 	{
@@ -151,25 +155,19 @@ int main(int argc, char **argv, char **envp)
 {
 	t_shell myshell;
 	int	a;
-	int	b;
 
 	a = 0;
-	b = 1;
 	(void)argv;
 	if (argc != 1)
 		ft_printf("Error: too many arguments\n");
 	else
 	{
 		ft_initvar(&myshell, envp);
-		while(b)
+		while(1)
 		{
 			ft_prompt(&myshell);
 			if (myshell.minput == NULL) // Handle EOF or error condition
 				break;
-			if (strcmp(myshell.minput, "exit") == 0) {
-        // Se o comando for "exit", saia imediatamente do loop
-        b = 0;
-			}
 			if (ft_exec(&myshell) == 1)
 			{
 				g_exit=1;

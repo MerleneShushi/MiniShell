@@ -34,13 +34,24 @@ void ft_del_env(t_list **head, char *name)
           *head = current->next;
         else
           previous->next = current->next;
+        free(exp_node->name);
+        free(exp_node->info);
         ft_lstdelone(current, free);
+        free(new_node->name);
+        free(new_node->info);
+        free(new_node);
         return ;
       }
     }
+    // free(exp_node->name);
+    // free(exp_node->info);
+    // free(exp_node);
     previous = current;
     current = current->next;
   }
+  free(new_node->name);
+  free(new_node->info);
+  free(new_node);
 }
 
 void ft_del_exp(t_list **head, char *name)
@@ -67,7 +78,12 @@ void ft_del_exp(t_list **head, char *name)
           *head = current->next;
         else
           previous->next = current->next;
+        free(exp_node->name);
+        free(exp_node->info);
         ft_lstdelone(current, free);
+        free(new_node->name);
+        free(new_node->info);
+        free(new_node);
         return ;
       }
     }
@@ -78,13 +94,20 @@ void ft_del_exp(t_list **head, char *name)
         *head = current->next;
       else
         previous->next = current->next;
+      free(exp_node->name);
+      free(exp_node->info);
       ft_lstdelone(current, free);
+      free(new_node->name);
+      free(new_node->info);
+      free(new_node);
       return ;
     }
     previous = current;
     current = current->next;
   }
-  //printf("%s\n", exp_node->name);
+  free(new_node->name);
+  free(new_node->info);
+  free(new_node);
 }
 
 void  ft_unset(t_shell *myshell)
